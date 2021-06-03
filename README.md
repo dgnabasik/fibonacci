@@ -8,7 +8,7 @@ Semi-Automated Installation::
  (a) ./install_fibonacci.sh
 
 Manual Client Installation::
- (a) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
+ (a) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci 
  (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && export NODE_ENV=development && go test -v 
      Start the Postgres server with: sudo systemctl start postgresql@12-main.service
  (c) Run the docker container with: docker-compose up --build
@@ -37,7 +37,8 @@ Ubuntu 18.04 Development Environment::
  (d) golang-migrate     Install from https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
      migrate create -ext sql -dir migrations -seq create_fibonacci_table
  (e) Execute: docker-compose up --build
- (f) Execute: sudo ./migration.sh
+ (f) Execute: cd ~/github.com/dgnabasik/fibonacci && sudo ./migration.sh
+ (g) Execute: 
 
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
