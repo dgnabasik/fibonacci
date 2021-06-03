@@ -4,7 +4,7 @@ Author: David Gnabasik
 Date:   June 2, 2021.
 Task:   Expose a Fibonacci sequence generator through a web API that memoizes intermediate values.
 
-Automated Installation:: 
+Semi-Automated Installation:: 
  (a) ./install_fibonacci.sh
 
 Manual Client Installation::
