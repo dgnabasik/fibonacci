@@ -170,6 +170,11 @@ func InitializeRoutes(fs *FibonacciService) *gin.Engine {
 	apiPort := GetPort()
 	api := "Handling API calls on " + GetHost() + ":" + apiPort
 	fmt.Println(api)
+	fmt.Println("URL Examples::")
+	fmt.Println("  http://localhost:5000/fib/clear")
+	fmt.Println("  http://localhost:5000/fib/10")
+	fmt.Println("  http://localhost:5000/fib/upper/120")
+
 	router.Run(":" + apiPort)
 	return router
 }

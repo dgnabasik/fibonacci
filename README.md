@@ -13,12 +13,12 @@ Expose a Fibonacci sequence generator through a web API that memoizes intermedia
 The maximum possible value returned is math.MaxFloat64 = 1.798e+308 // 2**1023 * (2**53 - 1) / 2**52
 But cutoff happens at math.MaxFloat32 = 3.4e+38  // 2**127 * (2**24 - 1) / 2**23
 
-Non-Docker Program Installation Requirements::
- (a) O/S: Ubuntu Linux 18.04.
- (b) Golang: v1.16.4    Install from https://golang.org/doc/install 
- (c) Postgres v12.6+    Install from https://www.postgresql.org/download/
+Development Environemnt::
+ (a) Docker (v20.10.6) & docker-compose (v1.26):   Install from https://docs.docker.com/engine/install/ubuntu/
+ (b) Golang: v1.16.4            Install from https://golang.org/doc/install 
+ (c) Postgres v12.6+            Install from https://www.postgresql.org/download/
  (d) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
- (e) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && go test -v fibonacci
+ (e) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && go test -v 
  (f) Run the docker container with: <<<<
  (g) Browse to http://localhost/fib/ to interact with the web page.
 
@@ -27,10 +27,10 @@ The web API should expose operations to::
  (b) fetch the number of memoized results less than a given value (e.g. there are 12 intermediate results less than 120), 
  (c) clear the data store. 
 
-URL Calls::
+URL Examples::
+http://localhost:5000/fib/clear     ==> true
 http://localhost:5000/fib/10        ==> 55
 http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
-http://localhost:5000/fib/clear     ==> true
 
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
