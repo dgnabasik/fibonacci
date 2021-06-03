@@ -47,14 +47,14 @@ Imported Go Packages::
  (e) github.com/jackc/pgx/v4/pgxpool
 
 Environment Variables in fib.env:: 
- (a) NODE_ENV: production or development.
- (b) Postgres datatbase variables within Docker container.
- 
+ (a) NODE_ENV: production or development. Change NODE_ENV to 'production' to run in docker container.
+ (b) Postgres datatbase variables within Docker container. Change <<PWD>> in FIB_DATABASE_URL to run local Postgres server.
+
 Program Limitations::
  (a) math.MaxFloat64 = 1.798e+308 // 2**1023 * (2**53 - 1) / 2**52
  (b) math.MaxFloat32 = 3.4e+38  // 2**127 * (2**24 - 1) / 2**23
 
-Postgres Database Tables:: See migrations/000001_create_items_table.up.sql
+Postgres Database Tables:: See migrations/000001_create_fibonacci_table.up.sql
 DROP TABLE IF EXISTS fibonacci;
 CREATE TABLE IF NOT EXISTS fibonacci (
     id integer NOT NULL DEFAULT 0,
