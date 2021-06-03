@@ -3,8 +3,8 @@ package main
 // webservice.go
 import (
 	"fmt"
+	"math"
 	"net/http"
-
 	"os"
 	"strconv"
 
@@ -13,20 +13,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// IFibonacciService interface
+type IFibonacciService interface {
+	GetFibonacci(ctx *gin.Context)
+	GetMemoizedResults(ctx *gin.Context)
+	ClearDataStore(ctx *gin.Context)
+}
+
+// FibonacciService struct implements IFibonacciService.
 type FibonacciService struct {
 }
 
-// GetFibonacci method returns Fibonacci as float64.
+// GetFibonacci method calls fibonacci() func and returns Fibonacci as float64.
+// Also calls SetMemoizedResults().
 func (fs *FibonacciService) GetFibonacci(ctx *gin.Context) {
 	ordinal, err := strconv.Atoi(ctx.Param("ordinal"))
 	if err != nil {
 		ordinal = 0
 	}
-
 	f := fibonacci()
 	var result float64
+	bigmap := make(map[int]float64)
+
 	for iter := 0; iter < ordinal; iter++ {
 		result = f()
+		bigmap[iter] = result
+		if result > math.MaxFloat64/2 {
+			break
+		}
+	}
+
+	err = SetMemoizedResults(bigmap)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	ctx.JSON(200, gin.H{
@@ -34,7 +53,7 @@ func (fs *FibonacciService) GetFibonacci(ctx *gin.Context) {
 	})
 }
 
-// GetMemoizedResults method returns NumberMemoizedResults as int.
+// GetMemoizedResults method calls GetMemoizedResults() func and returns NumberMemoizedResults as int.
 func (fs *FibonacciService) GetMemoizedResults(ctx *gin.Context) {
 	fibLimit, err := strconv.ParseFloat(ctx.Param("value"), 64)
 	if err != nil {
@@ -54,13 +73,14 @@ func (fs *FibonacciService) GetMemoizedResults(ctx *gin.Context) {
 	})
 }
 
-// ClearDataStore method
+// ClearDataStore method calls ClearDataStore() func.
 func (fs *FibonacciService) ClearDataStore(ctx *gin.Context) {
 	err := ClearDataStore()
 	if err != nil {
 		ctx.JSON(404, gin.H{
 			"error": err.Error(),
 		})
+		fmt.Println("bad ClearDataStore")
 		return
 	}
 
@@ -71,9 +91,13 @@ func (fs *FibonacciService) ClearDataStore(ctx *gin.Context) {
 
 /*************************************************************************************/
 
-// GetHost func returns full hostname from .environment (do NOT include :port)
+// GetHost func returns full hostname from fib.env (do NOT include :port)
 func GetHost() string {
-	return os.Getenv("FIB_API_DOMAIN")
+	host := os.Getenv("FIB_API_DOMAIN")
+	if host == "" {
+		host = "http://localhost"
+	}
+	return host
 }
 
 // GetPort func
@@ -106,7 +130,8 @@ func ContextOptions(ctx *gin.Context) {
 	}
 }
 
-func InitializeRoutes(fs *FibonacciService) *gin.Engine { // (client m.ClientCredentials)
+// InitializeRoutes func
+func InitializeRoutes(fs *FibonacciService) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode) // Switch to "release" mode in production; or export GIN_MODE=release
 	router := gin.Default()
 
@@ -127,7 +152,7 @@ func InitializeRoutes(fs *FibonacciService) *gin.Engine { // (client m.ClientCre
 
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./build/static")
-	// copy the React build directory to the golang folder when deploying to Docker!
+	// copy the build directory to the golang folder when deploying to Docker!
 	router.Use(static.Serve("/", static.LocalFile("./build", true)))
 
 	// Direct all routes to index.html:
@@ -139,9 +164,7 @@ func InitializeRoutes(fs *FibonacciService) *gin.Engine { // (client m.ClientCre
 	{
 		fib.GET("/:ordinal", fs.GetFibonacci)
 		fib.GET("/upper/:value", fs.GetMemoizedResults)
-
-		fib.OPTIONS("/clear", ContextOptions)
-		fib.POST("/clear", fs.ClearDataStore)
+		fib.GET("/clear", fs.ClearDataStore)
 	}
 
 	apiPort := GetPort()

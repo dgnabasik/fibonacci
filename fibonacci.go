@@ -9,12 +9,13 @@ import (
 	"time"
 )
 
+// FibonacciDB struct
 type FibonacciDB struct {
 	ID       int     `json:"id"`
 	FibValue float64 `json:"fibvalue"`
 }
 
-// fibonacci closure functor returns float64.
+// fibonacci func closure returns float64.
 func fibonacci() func() float64 {
 	var x float64 = 0
 	var y float64 = 1
@@ -24,6 +25,7 @@ func fibonacci() func() float64 {
 	}
 }
 
+// getIterations func gets Iterations fro mcommand line.
 func getIterations() int {
 	iterations := 500
 	if len(os.Args) > 1 {

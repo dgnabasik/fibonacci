@@ -17,15 +17,20 @@ Non-Docker Program Installation Requirements::
  (a) O/S: Ubuntu Linux 18.04.
  (b) Golang: v1.16.4    Install from https://golang.org/doc/install 
  (c) Postgres v12.6+    Install from https://www.postgresql.org/download/
- (d) mkdir ~/myprogams && cd ~/myprogams && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
- (e) Run tests from a terminal prompt with: cd ~/myprogams/dgnabasik/fibonacci && go test -v fibonacci
+ (d) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
+ (e) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && go test -v fibonacci
  (f) Run the docker container with: <<<<
- (g) Browse to http://localhost/fibonacci/ to interact with the web page.
+ (g) Browse to http://localhost/fib/ to interact with the web page.
 
 The web API should expose operations to::
  (a) fetch the Fibonacci number given an ordinal (e.g. Fib(11) == 89, Fib(12) == 144): 
  (b) fetch the number of memoized results less than a given value (e.g. there are 12 intermediate results less than 120), 
  (c) clear the data store. 
+
+URL Calls::
+http://localhost:5000/fib/10        ==> 55
+http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
+http://localhost:5000/fib/clear     ==> true
 
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
@@ -33,6 +38,9 @@ Imported Go Packages::
  (c) go get github.com/gin-gonic/contrib/static
  (d) go get github.com/gin-gonic/gin
 
+Environment Variables in fib.env::  <<<<
+ (a) FIB_DATABASE_URL
+ (b) FIB_API_DOMAIN
 
 Postgres Database Tables::
 DROP TABLE IF EXISTS public.fibonacci;

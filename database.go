@@ -65,7 +65,7 @@ func GetMemoizedResults(fibLimit float64) ([]FibonacciDB, error) {
 		return nil, err
 	}
 	defer db.Close()
-	// PK always returns in key order
+	// Primary Key always returns in key order.
 	query := "SELECT id, fibvalue FROM Fibonacci WHERE fibvalue < $1"
 	rows, err := db.Query(context.Background(), query, fibLimit)
 	CheckErr(err)
@@ -95,7 +95,7 @@ func ClearDataStore() error {
 
 // convertMapToFibonacciSlice in key order.
 func convertMapToFibonacciSlice(bigmap map[int]float64) []FibonacciDB {
-	// Convert map to slice of values.
+	// Convert map to slice of keys.
 	keys := []int{}
 	for key := range bigmap {
 		keys = append(keys, key)
@@ -116,12 +116,12 @@ func convertMapToFibonacciSlice(bigmap map[int]float64) []FibonacciDB {
 	return bigFibSlice
 }
 
-// SetMemoizedResults func performs Bulk insert.
+// SetMemoizedResults func performs Bulk insert/append.
 func SetMemoizedResults(bigmap map[int]float64) error {
-	err := ClearDataStore()
+	/*err := ClearDataStore()
 	if err != nil {
 		return err
-	}
+	}*/
 
 	bigFibSlice := convertMapToFibonacciSlice(bigmap)
 
