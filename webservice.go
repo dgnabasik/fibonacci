@@ -16,13 +16,6 @@ import (
 type FibonacciService struct {
 }
 
-var fibService FibonacciService
-
-func init() {
-	fibService = FibonacciService{}
-	InitializeRoutes(&fibService)
-}
-
 // GetFibonacci method returns Fibonacci as float64.
 func (fs *FibonacciService) GetFibonacci(ctx *gin.Context) {
 	ordinal, err := strconv.Atoi(ctx.Param("ordinal"))

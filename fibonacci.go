@@ -24,13 +24,7 @@ func fibonacci() func() float64 {
 	}
 }
 
-func main() {
-	/*FibonacciDBslice := Performance()
-	err := WriteFibonacciToCsvFile(FibonacciDBslice, "/tmp/fibonacci.csv")
-	if err != nil {
-		fmt.Println(err)
-	}*/
-
+func getIterations() int {
 	iterations := 500
 	if len(os.Args) > 1 {
 		xiterations, err := strconv.Atoi(os.Args[1])
@@ -42,7 +36,11 @@ func main() {
 		}
 	}
 	fmt.Printf("%s %d\n", "fibonacci iterations: ", iterations)
+	return iterations
+}
 
+func commandLine() {
+	iterations := getIterations()
 	bigmap := make(map[int]float64)
 	startTime := time.Now()
 	f := fibonacci()
@@ -63,4 +61,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func main() {
+	fibService := FibonacciService{}
+	InitializeRoutes(&fibService)
 }

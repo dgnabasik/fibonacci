@@ -78,4 +78,11 @@ func Test_fibonacci(t *testing.T) {
 	}
 	fmt.Printf("%s%d%s", "Fib(", iterations, ")=")
 	fmt.Println(result)
+
+	FibonacciDBslice := Performance()
+	err := WriteFibonacciToCsvFile(FibonacciDBslice, "/tmp/fibonacci.csv")
+	if err != nil {
+		t.Error("b2:Failed Performance(): ", err)
+	}
+
 }
