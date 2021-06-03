@@ -18,8 +18,9 @@ import (
 )
 
 const (
-	DBHOST = "database"
-	DBPORT = 5432
+	DBHOST   = "database"
+	DBPORT   = 5432
+	DBSCHEMA = "public."
 )
 
 func IsProduction() bool {
@@ -30,7 +31,7 @@ func IsProduction() bool {
 // GetHost func returns full hostname from fib.env (do NOT include :port)
 func GetHost() string {
 	if IsProduction() {
-		return "http://server"
+		return "http://localhost"
 	}
 
 	host := os.Getenv("FIB_API_DOMAIN")
@@ -100,7 +101,7 @@ func GetMemoizedResults(fibLimit float64) ([]FibonacciDB, error) {
 	}
 	defer db.Close()
 	// Primary Key always returns in key order.
-	query := "SELECT id, fibvalue FROM Fibonacci WHERE fibvalue < $1"
+	query := "SELECT id, fibvalue FROM " + DBSCHEMA + "Fibonacci WHERE fibvalue < $1"
 	rows, err := db.Query(context.Background(), query, fibLimit)
 	CheckErr(err)
 	defer rows.Close()
@@ -122,7 +123,7 @@ func ClearDataStore() error {
 	db, err := GetDatabaseReference()
 	CheckErr(err)
 	defer db.Close()
-	_, err = db.Exec(context.Background(), "TRUNCATE TABLE Fibonacci")
+	_, err = db.Exec(context.Background(), "TRUNCATE TABLE "+DBSCHEMA+"Fibonacci")
 	CheckErr(err)
 	return err
 }
@@ -171,7 +172,7 @@ func SetMemoizedResults(bigmap map[int]float64) error {
 	// Bulk insert must use lowercase column names!
 	copyCount, err := db.CopyFrom(
 		context.Background(),
-		pgx.Identifier{"fibonacci"}, // tablename
+		pgx.Identifier{DBSCHEMA + "fibonacci"}, // tablename
 		[]string{"id", "fibvalue"},
 		pgx.CopyFromSlice(len(bigFibSlice), func(i int) ([]interface{}, error) {
 			return []interface{}{bigFibSlice[i].ID, bigFibSlice[i].FibValue}, nil

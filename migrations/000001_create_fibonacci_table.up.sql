@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS public.fibonacci (
+CREATE TABLE IF NOT EXISTS fibonacci (
     id integer NOT NULL DEFAULT 0,
     fibvalue numeric(308,0),
    	CONSTRAINT fibonacci_pkey PRIMARY KEY (id)

@@ -37,8 +37,9 @@ Ubuntu 18.04 Development Environemnt::
  (b) Golang: v1.16.4    Install from https://golang.org/doc/install 
  (c) Postgres v12.6+    Install from https://www.postgresql.org/download/
  (h) golang-migrate     Install from https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
-    migrate create -ext sql -dir migrations -seq create_items_table
-
+    migrate create -ext sql -dir migrations -seq create_fibonacci_table
+ (i) Execute migration.sh script
+ 
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
  (b) go get github.com/gin-contrib/cors
@@ -54,8 +55,8 @@ Program Limitations::
  (b) math.MaxFloat32 = 3.4e+38  // 2**127 * (2**24 - 1) / 2**23
 
 Postgres Database Tables:: See migrations/000001_create_items_table.up.sql
-DROP TABLE IF EXISTS public.fibonacci;
-CREATE TABLE IF NOT EXISTS public.fibonacci (
+DROP TABLE IF EXISTS fibonacci;
+CREATE TABLE IF NOT EXISTS fibonacci (
     id integer NOT NULL DEFAULT 0,
     fibvalue numeric(308,0),
    	CONSTRAINT fibonacci_pkey PRIMARY KEY (id)

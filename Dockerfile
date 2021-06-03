@@ -1,6 +1,7 @@
 #Dockerfile for fibonacci project.
 FROM golang:1.16.4-alpine3.13 as builder
 RUN echo "Don't forget to first disable any local instances of Postgres with: sudo systemctl stop postgresql@12-main.service"
+ENV GO111MODULE=on
 COPY go.mod go.sum /go/src/github.com/dgnabasik/fibonacci/
 WORKDIR /go/src/github.com/dgnabasik/fibonacci
 RUN go mod download

@@ -1,6 +1,5 @@
 # docker-compose.yml version: '3.8' requires docker engine 19.03.0+
-#Docker compose will set the host of the containers it creates to the name of the container found in docker-compose.yml: {postgres, api, client}. 
-
+#Docker compose will set the host name of the containers it creates to the name of the container found in docker-compose.yml: {server, database}. 
 version: "3.8"
 services:
   database:
@@ -12,12 +11,15 @@ services:
       - "5432:5432"
     volumes:
       - data:/var/lib/postgresql/data
+
   server:
     build:
       context: .
       dockerfile: Dockerfile
     env_file: fib.env
     depends_on:
+      - database
+    links:
       - database
     networks:
       - default
