@@ -38,7 +38,7 @@ Imported Go Packages::
  (c) go get github.com/gin-gonic/contrib/static
  (d) go get github.com/gin-gonic/gin
 
-Environment Variables in fib.env::  <<<<
+Environment Variables in fib.env:: 
  (a) FIB_DATABASE_URL
  (b) FIB_API_DOMAIN
 
