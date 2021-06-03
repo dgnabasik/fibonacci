@@ -9,7 +9,8 @@ Automated Installation::
 
 Manual Client Installation::
  (a) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
- (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && go test -v 
+ (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && export NODE_ENV=development && go test -v 
+     Start the Postgres server with: sudo systemctl start postgresql@12-main.service
  (c) Run the docker container with: docker-compose up --build
  (d) Wait for the message of: "LOG:  database system is ready to accept connections."
  (d) Open a browser to enter API URLs.
@@ -20,31 +21,30 @@ The web API should expose operations to::
  (c) clear the data store. 
 
 Non-Docker Development URL Examples::
- (a) http://localhost:5000/fib/clear     ==> true
- (b) http://localhost:5000/fib/10        ==> 55
- (c) http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
+ (a) http://localhost:5000/fib/clear     ==> ClearDataStore: true
+ (b) http://localhost:5000/fib/10        ==> Fibonacci: 55
+ (c) http://localhost:5000/fib/upper/120 ==> NumberMemoizedResults: 11
 
-Docker URL Examples::
-    curl http://localhost:8080/fib/upper/120
+Docker URL Examples:: Or simply browse to the web address.
+ (a) curl http://localhost:8080/fib/20          ==> Fibonacci: 6765
+ (b) curl http://localhost:8080/fib/upper/500   ==> NumberMemoizedResults: 14
+ (c) curl http://localhost:8080/fib/clear       ==> ClearDataStore: true
 
- (a) http://localhost:5000/fib/clear     ==> true
- (b) http://localhost:5000/fib/10        ==> 55
- (c) http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
-
-Ubuntu 18.04 Development Environemnt::
+Ubuntu 18.04 Development Environment::
  (a) Docker (v20.10.6) & docker-compose (v1.26):   Install from https://docs.docker.com/engine/install/ubuntu/
-     docker-compose up --build
  (b) Golang: v1.16.4    Install from https://golang.org/doc/install 
  (c) Postgres v12.6+    Install from https://www.postgresql.org/download/
- (h) golang-migrate     Install from https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
-    migrate create -ext sql -dir migrations -seq create_fibonacci_table
- (i) Execute migration.sh script
- 
+ (d) golang-migrate     Install from https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
+     migrate create -ext sql -dir migrations -seq create_fibonacci_table
+ (e) Execute: docker-compose up --build
+ (f) Execute: sudo ./migration.sh
+
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
  (b) go get github.com/gin-contrib/cors
- (c) go get github.com/gin-gonic/contrib/static
- (d) go get github.com/gin-gonic/gin
+ (c) go get github.com/gin-gonic/gin
+ (d) github.com/jackc/pgx/v4
+ (e) github.com/jackc/pgx/v4/pgxpool
 
 Environment Variables in fib.env:: 
  (a) NODE_ENV: production or development.

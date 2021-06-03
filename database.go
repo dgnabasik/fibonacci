@@ -20,7 +20,7 @@ import (
 const (
 	DBHOST   = "database"
 	DBPORT   = 5432
-	DBSCHEMA = "public."
+	DBSCHEMA = "" // public.
 )
 
 func IsProduction() bool {
@@ -213,7 +213,7 @@ func WriteTextFile(lines []string, filePath string) error {
 
 // WriteFibonacciToCsvFile func
 func WriteFibonacciToCsvFile(data []FibonacciDB, outputFile string) error {
-	fmt.Println("Writing performance data to " + outputFile)
+	fmt.Println("\nWriting performance data to " + outputFile)
 	lines := make([]string, len(data)+1)
 	lines[0] = "Iterations,Seconds"
 	ndx := 1

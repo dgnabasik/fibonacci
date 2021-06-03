@@ -9,17 +9,17 @@ import (
 // Test_database func
 func Test_database(t *testing.T) {
 	if IsProduction() && GetHost() != "http://server" {
-		t.Error("a1a:GetHost incorrect ", err)
+		t.Error("a1a:GetHost incorrect ")
 	}
 	if !IsProduction() && GetHost() != "http://localhost" {
-		t.Error("a1b:GetHost incorrect ", err)
+		t.Error("a1b:GetHost incorrect ")
 	}
 
 	if IsProduction() && GetPort() != "8080" {
-		t.Error("a2a:GetPort incorrect ", err)
+		t.Error("a2a:GetPort incorrect ")
 	}
 	if !IsProduction() && GetPort() != "5000" {
-		t.Error("a2b:GetPort incorrect ", err)
+		t.Error("a2b:GetPort incorrect ")
 	}
 
 	dbConn := GetDatabaseConnectionString()

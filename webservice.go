@@ -4,11 +4,10 @@ package main
 import (
 	"fmt"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"math"
 	"net/http"
 	"strconv"
-	//"github.com/gin-gonic/contrib/static"
-	"github.com/gin-gonic/gin"
 )
 
 // IFibonacciService interface
