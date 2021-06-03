@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"context" // pgx driver uses context: see https://golang.org/pkg/context/
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"sort"
@@ -18,27 +17,70 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool" // https://pkg.go.dev/github.com/jackc/pgx/v4/pgxpool
 )
 
-// CheckErr database error handler.
-func CheckErr(err error) {
-	if err != nil {
-		log.Printf("Database CheckErr %+v\n", err)
-		fmt.Println(err)
+const (
+	DBHOST = "database"
+	DBPORT = 5432
+)
+
+func IsProduction() bool {
+	mode := os.Getenv("NODE_ENV")
+	return strings.ToLower(mode) == "production"
+}
+
+// GetHost func returns full hostname from fib.env (do NOT include :port)
+func GetHost() string {
+	if IsProduction() {
+		return "http://server"
 	}
+
+	host := os.Getenv("FIB_API_DOMAIN")
+	if host == "" {
+		host = "http://localhost"
+	}
+	return host
+}
+
+// GetPort func
+func GetPort() string {
+	if IsProduction() {
+		return "8080"
+	}
+	return "5000"
 }
 
 // GetDatabaseConnectionString func uses environment var FIB_DATABASE_URL
 func GetDatabaseConnectionString() string {
+	if IsProduction() {
+		username := os.Getenv("POSTGRES_USER")
+		database := os.Getenv("POSTGRES_DB")
+		password := os.Getenv("POSTGRES_PASSWORD")
+		if username == "" || database == "" || password == "" {
+			fmt.Println("POSTGRES variables not found in environment variables...exiting")
+			os.Exit(1)
+		}
+		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", DBHOST, DBPORT, username, password, database)
+	}
+
 	connStr := os.Getenv("FIB_DATABASE_URL")
 	if connStr == "" {
-		log.Panic("FIB_DATABASE_URL not found in environment variables")
+		fmt.Println("FIB_DATABASE_URL not found in environment variables...exiting")
+		os.Exit(1)
 	}
 	return connStr
+}
+
+// CheckErr database error handler.
+func CheckErr(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 // GetDatabaseReference opens a database specified by its database driver name and a driver-specific data source name: db,err := GetDatabaseReference()
 // defer db.Close() must follow a call to this function in the calling function. sslmode is set to 'required' by default.
 func GetDatabaseReference() (*pgxpool.Pool, error) {
 	dbConn := GetDatabaseConnectionString()
+	fmt.Println("Connecting to: " + dbConn)
 	db, err := pgxpool.Connect(context.Background(), dbConn)
 	CheckErr(err)
 	err = db.Ping(context.Background())
@@ -46,14 +88,6 @@ func GetDatabaseReference() (*pgxpool.Pool, error) {
 		fmt.Println(err)
 	}
 	return db, err
-}
-
-// NoRowsReturned func
-func NoRowsReturned(err error) bool {
-	if err == nil {
-		return false
-	}
-	return strings.Contains(err.Error(), "no rows in result set")
 }
 
 /**************************************************************************************/

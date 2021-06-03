@@ -1,3 +1,6 @@
+# docker-compose.yml version: '3.8' requires docker engine 19.03.0+
+#Docker compose will set the host of the containers it creates to the name of the container found in docker-compose.yml: {postgres, api, client}. 
+
 version: "3.8"
 services:
   database:

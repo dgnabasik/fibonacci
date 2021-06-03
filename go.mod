@@ -1,4 +1,4 @@
-module fibonacci
+module github.com/dgnabasik/fibonacci
 
 go 1.16
 

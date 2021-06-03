@@ -4,25 +4,34 @@ Author: David Gnabasik
 Date:   June 2, 2021.
 Task:   Expose a Fibonacci sequence generator through a web API that memoizes intermediate values.
 
-Client Installation::
+Automated Installation:: 
+ (a) ./install_fibonacci.sh
+
+Manual Client Installation::
  (a) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci  -OR- go get github.com/dgnabasik/fibonacci/...  (gets all dependencies)
  (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && go test -v 
- (c) Run the docker container with: <<<<
- (d) Browse to http://localhost/fib/ to enter API URLs.
-
-URL Examples::
-http://localhost:5000/fib/clear     ==> true
-http://localhost:5000/fib/10        ==> 55
-http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
+ (c) Run the docker container with: docker-compose up --build
+ (d) Wait for the message of: "LOG:  database system is ready to accept connections."
+ (d) Open a browser to enter API URLs.
 
 The web API should expose operations to::
  (a) fetch the Fibonacci number given an ordinal (e.g. Fib(11) == 89, Fib(12) == 144): 
- (b) fetch the number of memoized results less than a given value (e.g. there are 12 intermediate results less than 120), 
+ (b) fetch the number of memoized results less than a given value (e.g. there are 12 intermediate results less than 120). No, there are 11.
  (c) clear the data store. 
-The maximum possible value returned is math.MaxFloat64 = 1.798e+308 // 2**1023 * (2**53 - 1) / 2**52
-But cutoff happens at math.MaxFloat32 = 3.4e+38  // 2**127 * (2**24 - 1) / 2**23
 
-Development Environemnt::
+Non-Docker Development URL Examples::
+ (a) http://localhost:5000/fib/clear     ==> true
+ (b) http://localhost:5000/fib/10        ==> 55
+ (c) http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
+
+Docker URL Examples::
+    curl http://localhost:8080/fib/upper/120
+
+ (a) http://localhost:5000/fib/clear     ==> true
+ (b) http://localhost:5000/fib/10        ==> 55
+ (c) http://localhost:5000/fib/upper/120 ==> 11 (not 12!)
+
+Ubuntu 18.04 Development Environemnt::
  (a) Docker (v20.10.6) & docker-compose (v1.26):   Install from https://docs.docker.com/engine/install/ubuntu/
      docker-compose up --build
  (b) Golang: v1.16.4    Install from https://golang.org/doc/install 
@@ -37,8 +46,12 @@ Imported Go Packages::
  (d) go get github.com/gin-gonic/gin
 
 Environment Variables in fib.env:: 
- (a) FIB_DATABASE_URL
- (b) FIB_API_DOMAIN
+ (a) NODE_ENV: production or development.
+ (b) Postgres datatbase variables within Docker container.
+ 
+Program Limitations::
+ (a) math.MaxFloat64 = 1.798e+308 // 2**1023 * (2**53 - 1) / 2**52
+ (b) math.MaxFloat32 = 3.4e+38  // 2**127 * (2**24 - 1) / 2**23
 
 Postgres Database Tables:: See migrations/000001_create_items_table.up.sql
 DROP TABLE IF EXISTS public.fibonacci;

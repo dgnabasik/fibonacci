@@ -3,13 +3,11 @@ package main
 // webservice.go
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"math"
 	"net/http"
-	"os"
 	"strconv"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/contrib/static"
+	//"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -91,24 +89,6 @@ func (fs *FibonacciService) ClearDataStore(ctx *gin.Context) {
 
 /*************************************************************************************/
 
-// GetHost func returns full hostname from fib.env (do NOT include :port)
-func GetHost() string {
-	host := os.Getenv("FIB_API_DOMAIN")
-	if host == "" {
-		host = "http://localhost"
-	}
-	return host
-}
-
-// GetPort func
-func GetPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
-	return port
-}
-
 // ContextOptions func matches axios headers configuration.
 // For the server to allow CORS, catch all Preflight OPTIONS requests that the client browser sends before the real query is sent to the SAME URL.
 // In general, the pre-flight OPTIONS request doesn't like 301 redirects where the server is caching at different levels.
@@ -150,10 +130,10 @@ func InitializeRoutes(fs *FibonacciService) *gin.Engine {
 		MaxAge: 86400,
 	}))
 
-	router.LoadHTMLGlob("templates/*")
-	router.Static("/static", "./build/static")
-	// copy the build directory to the golang folder when deploying to Docker!
-	router.Use(static.Serve("/", static.LocalFile("./build", true)))
+	// Not necessary:
+	//router.LoadHTMLGlob("templates/*")
+	//router.Static("/static", "./build/static")
+	//router.Use(static.Serve("/", static.LocalFile("./build", true)))
 
 	// Direct all routes to index.html:
 	router.GET("/", func(ctx *gin.Context) {
@@ -170,10 +150,6 @@ func InitializeRoutes(fs *FibonacciService) *gin.Engine {
 	apiPort := GetPort()
 	api := "Handling API calls on " + GetHost() + ":" + apiPort
 	fmt.Println(api)
-	fmt.Println("URL Examples::")
-	fmt.Println("  http://localhost:5000/fib/clear")
-	fmt.Println("  http://localhost:5000/fib/10")
-	fmt.Println("  http://localhost:5000/fib/upper/120")
 
 	router.Run(":" + apiPort)
 	return router
