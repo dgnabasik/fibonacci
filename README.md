@@ -4,16 +4,23 @@ Author: David Gnabasik
 Date:   June 2, 2021.
 Task:   Expose a Fibonacci sequence generator through a web API that memoizes intermediate values.
 
-Semi-Automated Installation:: 
- (a) ./install_fibonacci.sh
+Semi-Automated Installation:: See ./install_fibonacci.sh
+    mkdir -p ~/github.com/dgnabasik && cd ~/github.com/dgnabasik 
+    git clone https://github.com/dgnabasik/fibonacci 
+    cd fibonacci && pwd
+    docker-compose up --build
+    "Do not forget to first disable any local instances of Postgres with: sudo systemctl stop postgresql@12-main.service"
+    "Open another terminal and execute: cd ~/github.com/dgnabasik/fibonacci && ./migration.sh "
+    "Execute the curl commands in README.md or open a browser to the web addresses in README.md."
+    "Press ctrl-C to stop the server. Execute ./cleanDocker.sh to remove the docker containers."
 
 Manual Client Installation::
- (a) mkdir ~/github.com && cd ~/github.com && git clone https://github.com/dgnabasik/fibonacci 
- (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && export NODE_ENV=development && go test -v 
-     Start the Postgres server with: sudo systemctl start postgresql@12-main.service
+ (a) mkdir ~/github.com/dgnabasik && cd ~/github.com/dgnabasik && git clone https://github.com/dgnabasik/fibonacci 
+ (b) Run tests from a terminal prompt with: cd ~/github.com/dgnabasik/fibonacci && cat fib.env && source fib.env && export NODE_ENV=development && go test -v 
+     if not running, start the local Postgres server with: sudo systemctl start postgresql@12-main.service
  (c) Run the docker container with: docker-compose up --build
  (d) Wait for the message of: "LOG:  database system is ready to accept connections."
- (d) Open a browser to enter API URLs.
+ (d) Open a browser to enter API URLs or use the curl command.
 
 The web API should expose operations to::
  (a) fetch the Fibonacci number given an ordinal (e.g. Fib(11) == 89, Fib(12) == 144): 
@@ -38,7 +45,6 @@ Ubuntu 18.04 Development Environment::
      migrate create -ext sql -dir migrations -seq create_fibonacci_table
  (e) Execute: docker-compose up --build
  (f) Execute: cd ~/github.com/dgnabasik/fibonacci && sudo ./migration.sh
- (g) Execute: 
 
 Imported Go Packages::
  (a) go get github.com/jackc/pgx/v4/pgxpool
@@ -72,4 +78,3 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/dgnabasik/fibonacci.git
 git push -u origin main
-

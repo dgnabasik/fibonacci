@@ -1,8 +1,9 @@
+# install_fibonacci.sh
 mkdir -p ~/github.com/dgnabasik && cd ~/github.com/dgnabasik 
 git clone https://github.com/dgnabasik/fibonacci 
 cd fibonacci && pwd
 echo ""
-echo "Don`t forget to first disable any local instances of Postgres with: sudo systemctl stop postgresql@12-main.service"
+echo "Do not forget to first disable any local instances of Postgres with: sudo systemctl stop postgresql@12-main.service"
 echo ""
 docker-compose up --build
 echo ""
